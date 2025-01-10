@@ -1,5 +1,13 @@
-import { PrimaryGeneratedColumn, Column } from 'typeorm';
+import {
+  PrimaryGeneratedColumn,
+  Column,
+  Entity,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
+import { User } from './User.entity';
 
+@Entity('auth')
 export class Auth {
   @PrimaryGeneratedColumn('uuid')
   id: number;
@@ -10,9 +18,7 @@ export class Auth {
   })
   password: string;
 
-  @Column({
-    type: 'varchar',
-    nullable: false,
-  })
-  userId: string;
+  @ManyToOne(() => User)
+  @JoinColumn({ name: 'userId' })
+  userId: User;
 }
