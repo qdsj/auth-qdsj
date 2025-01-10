@@ -3,16 +3,8 @@ on:
     branches: [main]
 jobs:
   main:
-    runs-on: ubuntu-latest
-    environment: production
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4.2.2
-        with:
-          persist-credentials: false
-      - name: Start deploy
-        uses: ./.github/actions
-        with:
-          branch: main
-          port: '3101'
-          docker_name: 'authqdsj'
+    uses: ./.github/workflows/deploy.yml
+    with:
+      branch: main
+      port: '3101'
+      docker_name: 'authqdsj'

@@ -2,25 +2,21 @@ name: 'Common Steps'
 
 on:
   workflow_call:
-  inputs:
-    branch:
-      required: true
-      type: string
-    port:
-      required: true
-      type: string
-    docker_name:
-      required: true
-      type: string
+    inputs:
+      branch:
+        required: true
+        type: string
+      port:
+        required: true
+        type: string
+      docker_name:
+        required: true
+        type: string
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4.2.2
-        with:
-          persist-credentials: false
       - name: Set up variables
         id: vars
         run: |
