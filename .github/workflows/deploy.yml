@@ -17,9 +17,9 @@ jobs:
       - name: Load variables
         run: |
           source data.env
-          echo "${_branch}"
-          echo "${_port}"
-          echo "${_docker_name}"
+          echo "${qdsj-branch}"
+          echo "${qdsj-port}"
+          echo "${qdsj-docker-name}"
       - name: Checkout Code
         uses: actions/checkout@v4.2.2
         with:
