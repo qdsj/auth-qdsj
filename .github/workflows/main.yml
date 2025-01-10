@@ -16,12 +16,12 @@ jobs:
           echo "qdsjDockerName=authqdsj" >> data.env
           cat data.env
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: dataEnv
           path: data.env
       - name: Download artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: 'dataEnv'
       - name: Load variables
