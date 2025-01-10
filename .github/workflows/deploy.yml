@@ -15,7 +15,6 @@ on:
 jobs:
   develop:
     runs-on: ubuntu-latest
-    environment: development
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4.2.2

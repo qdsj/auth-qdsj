@@ -7,7 +7,7 @@ jobs:
     environment: production
     steps:
       - name: Start deploy
-        uses: ./deploy.yml
+        uses: ./.github/workflows/deploy.yml
         with:
           branch: develop
           port: '3100'
