@@ -6,6 +6,10 @@ jobs:
     runs-on: ubuntu-latest
     environment: production
     steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4.2.2
+        with:
+          persist-credentials: false
       - name: Start deploy
         uses: ./.github/workflows/deploy.yml
         with:
