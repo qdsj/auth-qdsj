@@ -10,6 +10,10 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4.2.2
+        with:
+          persist-credentials: false
       - name: Download artifact
         uses: actions/download-artifact@v4
         with:
@@ -20,11 +24,6 @@ jobs:
           echo "${qdsj-branch}"
           echo "${qdsj-port}"
           echo "${qdsj-docker-name}"
-      - name: Checkout Code
-        uses: actions/checkout@v4.2.2
-        with:
-          persist-credentials: false
-
       - name: Set up variables
         id: vars
         run: |
