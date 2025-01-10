@@ -1,17 +1,16 @@
 name: 'Common Steps'
 
 on:
-  workflow_call:
-    inputs:
-      branch:
-        required: true
-        type: string
-      port:
-        required: true
-        type: string
-      docker_name:
-        required: true
-        type: string
+  inputs:
+    branch:
+      required: true
+      type: string
+    port:
+      required: true
+      type: string
+    docker_name:
+      required: true
+      type: string
 
 runs:
   using: 'composite'

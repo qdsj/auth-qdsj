@@ -11,7 +11,7 @@ jobs:
         with:
           persist-credentials: false
       - name: Start deploy
-        uses: ./.github/actions/deploy.yml
+        uses: ./.github/actions/action.yml
         with:
           branch: develop
           port: '3100'
