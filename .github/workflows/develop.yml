@@ -1,0 +1,14 @@
+on:
+  push:
+    branches: [main]
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Start deploy
+        uses: ./deploy.yml
+        with:
+          branch: develop
+          port: '3100'
+          docker_name: 'authqdsj'

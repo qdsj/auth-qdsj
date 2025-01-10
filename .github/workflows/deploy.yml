@@ -1,6 +1,17 @@
+name: Common Steps
+
 on:
-  push:
-    branches: [develop, main]
+  workflow_call:
+    inputs:
+      branch:
+        required: true
+        type: string
+      port:
+        required: true
+        type: string
+      docker_name:
+        required: true
+        type: string
 jobs:
   develop:
     runs-on: ubuntu-latest
@@ -13,8 +24,9 @@ jobs:
       - name: Set up variables
         id: vars
         run: |
-          echo "date=$(date +'%Y%m%d_%H%M%S')" >> $GITHUB_OUTPUT
-          echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
+          date=$(date +'%Y%m%d_%H%M%S')
+          version=$(node -p "require('./package.json').version")
+          echo "tag=${{ inputs.branch }}-${ version }-${ date }" >> $GITHUB_OUTPUT
 
       # 登录到 Docker Hub
       - name: Login to Docker Hub
@@ -26,7 +38,7 @@ jobs:
       # 构建并推送 Docker 镜像
       - name: Build and push
         env:
-          DOCKER_TAG: ${{ steps.vars.outputs.version }}-${{ steps.vars.outputs.date }}
+          DOCKER_TAG: ${{ steps.vars.outputs.tag }}
         uses: docker/build-push-action@v5
         with:
           push: true
@@ -40,14 +52,14 @@ jobs:
           username: ${{ secrets.SERVER_USER_NAME }}
           key: ${{ secrets.SERVER_KEY }}
           script: |
-            docker pull zenoschen/authqdsj:${{ steps.vars.outputs.version }}-${{ steps.vars.outputs.date }}
-            docker stop authqdsj || true
-            docker rm authqdsj || true
-            docker run -d --name authqdsj \
-              -p 3000:3000 \
+            docker pull zenoschen/${{ inputs.docker_name }}:${{ steps.vars.outputs.tag }}
+            docker stop ${ docker_name } || true
+            docker rm ${ docker_name } || true
+            docker run -d --name ${ docker_name } \
+              -p ${{ inputs.port }}:${{ inputs.port }} \
               -e DB_HOST=${{ secrets.SERVER_HOST }} \
               -e DB_USERNAME=${{ secrets.SERVER_SQL_TODOLIST_NAME }} \
               -e DB_PASSWORD=${{ secrets.SERVER_SQL_TODOLIST_KEY }} \
               -e DB_PORT=${{ secrets.SERVER_SQL_PORT }} \
               -e DB_DATABASE=authqdsj \
-              zenoschen/authqdsj:${{ steps.vars.outputs.version }}-${{ steps.vars.outputs.date }}
+              zenoschen/${{ inputs.docker_name }}:${{ steps.vars.outputs.tag }}
