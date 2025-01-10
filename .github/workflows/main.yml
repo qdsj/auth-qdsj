@@ -11,9 +11,9 @@ jobs:
     steps:
       - name: Set Main Branch variables
         run: |
-          echo "qdsj-branch='main'" >> data.env
-          echo "qdsj-port='3101'" >> data.env
-          echo "qdsj-docker-name='authqdsj'" >> data.env
+          echo "qdsjBranch=main" >> data.env
+          echo "qdsjPort=3101" >> data.env
+          echo "qdsjDockerName=authqdsj" >> data.env
           cat data.env
       - name: Upload artifact
         uses: actions/upload-artifact@v3
@@ -27,6 +27,6 @@ jobs:
       - name: Load variables
         run: |
           source data.env
-          echo "${qdsj-branch}"
-          echo "${qdsj-port}"
-          echo "${qdsj-docker-name}"
+          echo "${qdsjBranch}"
+          echo "${qdsjPort}"
+          echo "${qdsjDockerName}"
