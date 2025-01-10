@@ -20,3 +20,13 @@ jobs:
         with:
           name: dataEnv
           path: data.env
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: 'dataEnv'
+      - name: Load variables
+        run: |
+          source data.env
+          echo "${qdsj-branch}"
+          echo "${qdsj-port}"
+          echo "${qdsj-docker-name}"
