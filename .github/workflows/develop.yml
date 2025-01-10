@@ -1,10 +1,22 @@
 on:
   push:
     branches: [develop]
+
 jobs:
   develop:
-    uses: ./.github/workflows/deploy.yml
-    with:
-      branch: develop
-      port: '3100'
-      docker_name: 'authqdsj'
+    runs-on: ubuntu-latest
+    environment: development
+    steps:
+      - name: Set Main Branch variables
+        run: |
+          branch='develop'
+          port='3100'
+          docker_name='authqdsj'
+          echo "branch=${branch}" >> data.env
+          echo "port=${port}" >> data.env
+          echo "docker_name=${docker_name}" >> data.env
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: data.env
+          path: data.env
