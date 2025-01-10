@@ -1,6 +1,7 @@
 name: 'Common Steps'
 
 on:
+  workflow_call:
   inputs:
     branch:
       required: true
