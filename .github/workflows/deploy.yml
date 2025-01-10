@@ -1,0 +1,53 @@
+on:
+  push:
+    branches: [develop, main]
+jobs:
+  develop:
+    runs-on: ubuntu-latest
+    environment: development
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4.2.2
+        with:
+          persist-credentials: false
+      - name: Set up variables
+        id: vars
+        run: |
+          echo "date=$(date +'%Y%m%d_%H%M%S')" >> $GITHUB_OUTPUT
+          echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
+
+      # 登录到 Docker Hub
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_NAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+      # 构建并推送 Docker 镜像
+      - name: Build and push
+        env:
+          DOCKER_TAG: ${{ steps.vars.outputs.version }}-${{ steps.vars.outputs.date }}
+        uses: docker/build-push-action@v5
+        with:
+          push: true
+          tags: zenoschen/authqdsj:${{ env.DOCKER_TAG }}
+
+      # 通过 SSH 在服务器上部署
+      - name: Deploy to Server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER_NAME }}
+          key: ${{ secrets.SERVER_KEY }}
+          script: |
+            docker pull zenoschen/authqdsj:${{ steps.vars.outputs.version }}-${{ steps.vars.outputs.date }}
+            docker stop authqdsj || true
+            docker rm authqdsj || true
+            docker run -d --name authqdsj \
+              -p 3000:3000 \
+              -e DB_HOST=${{ secrets.SERVER_HOST }} \
+              -e DB_USERNAME=${{ secrets.SERVER_SQL_TODOLIST_NAME }} \
+              -e DB_PASSWORD=${{ secrets.SERVER_SQL_TODOLIST_KEY }} \
+              -e DB_PORT=${{ secrets.SERVER_SQL_PORT }} \
+              -e DB_DATABASE=authqdsj \
+              zenoschen/authqdsj:${{ steps.vars.outputs.version }}-${{ steps.vars.outputs.date }}
