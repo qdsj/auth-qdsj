@@ -10,12 +10,8 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4.2.2
-        with:
-          persist-credentials: false
       - name: Download artifact
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: data-env
       - name: Load variables
@@ -24,6 +20,11 @@ jobs:
           echo "${_branch}"
           echo "${_port}"
           echo "${_docker_name}"
+      - name: Checkout Code
+        uses: actions/checkout@v4.2.2
+        with:
+          persist-credentials: false
+
       - name: Set up variables
         id: vars
         run: |
