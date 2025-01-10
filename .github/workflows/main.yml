@@ -1,8 +1,7 @@
 name: Main
 
 on:
-  push:
-    branches: [main]
+  workflow_call:
 
 jobs:
   main:
@@ -20,13 +19,3 @@ jobs:
         with:
           name: dataEnv
           path: data.env
-      - name: Download artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: 'dataEnv'
-      - name: Load variables
-        run: |
-          source data.env
-          echo "${qdsjBranch}"
-          echo "${qdsjPort}"
-          echo "${qdsjDockerName}"

@@ -1,12 +1,13 @@
 name: Deploy
 
 on:
-  workflow_run:
-    workflows: ['Main']
-    types:
-      - completed
+  push:
+    branches: [main]
 
 jobs:
+  setBranchVariables:
+    uses: ./.github/workflows/main.yml
+
   deploy:
     runs-on: ubuntu-latest
     steps:
