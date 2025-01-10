@@ -16,7 +16,7 @@ jobs:
           echo "_docker_name=authqdsj" >> data.env
           cat data.env
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v2
         with:
           name: data-env
           path: data.env
