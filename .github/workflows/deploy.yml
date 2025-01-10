@@ -1,3 +1,5 @@
+name: Deploy
+
 on:
   workflow_run:
     workflows: ['Main']
@@ -15,7 +17,7 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v4
         with:
-          name: data.env
+          name: data-env
       - name: Load variables
         run: |
           source data.env
