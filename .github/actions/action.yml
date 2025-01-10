@@ -13,11 +13,12 @@ on:
       required: true
       type: string
 
-runs:
-  using: 'composite'
-  steps:
-    - name: Set up variables
-      id: vars
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up variables
+        id: vars
       run: |
         date=$(date +'%Y%m%d_%H%M%S')
         version=$(node -p "require('./package.json').version")
