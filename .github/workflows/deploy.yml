@@ -78,11 +78,11 @@ jobs:
       # 构建并推送 Docker 镜像
       - name: Build and push
         env:
-          DOCKER_TAG: ${{ steps.vars.outputs.tag }}
+          DOCKER_TAG: ${tag}
         uses: docker/build-push-action@v5
         with:
           push: true
-          tags: zenoschen/authqdsj:${tag}
+          tags: zenoschen/authqdsj:${{ env.DOCKER_TAG }}
 
       # 通过 SSH 在服务器上部署
       - name: Deploy to Server
