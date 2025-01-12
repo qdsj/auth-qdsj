@@ -59,7 +59,7 @@ jobs:
         run: |
           date=$(date +'%Y%m%d_%H%M%S')
           version=$(node -p "require('./package.json').version")
-          tag=${environment}-${version}-${ date }
+          tag="${environment}-${version}-${date}"
           echo ${tag}
           echo "tag=${tag}" >> $GITHUB_ENV
       - name: Print tag
