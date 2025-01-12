@@ -8,6 +8,10 @@ jobs:
   setEnv:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4.2.2
+        with:
+          persist-credentials: false
       - name: Set Environment
         run: |
           echo ${{ github.ref }}
