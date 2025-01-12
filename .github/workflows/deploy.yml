@@ -46,23 +46,23 @@ jobs:
           name: data-env
 
       - name: Load variables
+        id: vars
         run: |
           source data.env
           echo ${environment}
           echo ${port}
           echo ${dockerName}
-          echo "environment=${environment}" >> $GITHUB_ENV
-          echo "port=${port}" >> $GITHUB_ENV
-          echo "dockerName=${dockerName}" >> $GITHUB_ENV
-      - name: Set up variables
-        id: vars
-        run: |
+
           date=$(date +'%Y%m%d_%H%M%S')
           version=$(node -p "require('./package.json').version")
           tag="${environment}-${version}-${date}"
           echo ${tag}
-          echo "tag=${tag}" >> $GITHUB_ENV
+
           echo "tag=${tag}" >> $GITHUB_OUTPUT
+          echo "environment=${environment}" >> $GITHUB_OUTPUT
+          echo "port=${port}" >> $GITHUB_OUTPUT
+          echo "dockerName=${dockerName}" >> $GITHUB_OUTPUT
+
       - name: Print tag
         run: |
           echo "tag=${tag}"
@@ -87,20 +87,25 @@ jobs:
 
       # 通过 SSH 在服务器上部署
       - name: Deploy to Server
+        env:
+          port: ${{ steps.vars.outputs.port }}
+          dockerName: ${{ steps.vars.outputs.dockerName }}
+          tag: ${{ steps.vars.outputs.tag }}
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER_NAME }}
           key: ${{ secrets.SERVER_KEY }}
+          port: ${{ env.port }}
           script: |
-            docker pull zenoschen/${dockerName}:${tag}
-            docker stop ${dockerName} || true
-            docker rm ${dockerName} || true
-            docker run -d --name ${dockerName} \
-              -p ${port}:${port} \
+            docker pull zenoschen/${{ env.dockerName }}:${{ env.tag }}
+            docker stop ${{ env.dockerName }} || true
+            docker rm ${{ env.dockerName }} || true
+            docker run -d --name ${{ env.dockerName }} \
+              -p ${{ env.port }}:${{ env.port }} \
               -e DB_HOST=${{ secrets.SERVER_HOST }} \
               -e DB_USERNAME=${{ secrets.SERVER_SQL_TODOLIST_NAME }} \
               -e DB_PASSWORD=${{ secrets.SERVER_SQL_TODOLIST_KEY }} \
               -e DB_PORT=${{ secrets.SERVER_SQL_PORT }} \
               -e DB_DATABASE=authqdsj \
-              zenoschen/${dockerName}:${tag}
+              zenoschen/${{ env.dockerName }}:${{ env.tag }}
