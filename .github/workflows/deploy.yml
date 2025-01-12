@@ -107,4 +107,5 @@ jobs:
               -e DB_PASSWORD=${{ secrets.SQL_AUTHQDSJ_KEY }} \
               -e DB_PORT=${{ secrets.SERVER_SQL_PORT }} \
               -e DB_DATABASE=authqdsj \
+              -e PORT=${{ env.port }} \
               zenoschen/${{ env.dockerName }}:${{ env.tag }}

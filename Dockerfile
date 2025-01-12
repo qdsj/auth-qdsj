@@ -27,7 +27,8 @@ ENV DB_PASSWORD=
 ENV DB_PORT=3307
 ENV DB_DATABASE=authqdsj
 ENV NODE_ENV=production
+ENV PORT=
 
-EXPOSE 3100
+EXPOSE ${PORT}
 
 CMD ["node", "main.js"]
