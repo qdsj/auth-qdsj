@@ -51,12 +51,15 @@ jobs:
           echo ${environment}
           echo ${port}
           echo ${dockerName}
+          echo "environment=${environment}" >> $GITHUB_ENV
+          echo "port=${port}" >> $GITHUB_ENV
+          echo "dockerName=${dockerName}" >> $GITHUB_ENV
       - name: Set up variables
         id: vars
         run: |
           date=$(date +'%Y%m%d_%H%M%S')
           version=$(node -p "require('./package.json').version")
-          tag='${environment}-${ version }-${ date }'
+          tag=${environment}-${version}-${ date }
           echo ${tag}
           echo "tag=${tag}" >> $GITHUB_ENV
       - name: Print tag
