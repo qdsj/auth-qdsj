@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
+import { JwtModule } from '@nestjs/jwt';
 // import { TypeOrmModule } from '@nestjs/typeorm';
 // import { User } from './auth/entities/User.entity';
 // import { Auth } from './auth/entities/auth.entity';
@@ -27,6 +28,11 @@ import { AuthModule } from './auth/auth.module';
     //   },
     // }),
     AuthModule,
+    JwtModule.register({
+      global: true,
+      secret: process.env.JWT_SECRET || 'zenos',
+      signOptions: { expiresIn: '12h' },
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],

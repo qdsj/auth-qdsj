@@ -1,26 +1,41 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
+import { LoginAuthDto } from './dto/login-auth.dto';
+
+const users = [
+  {
+    username: 'admin',
+    password: '123456',
+  },
+];
 
 @Injectable()
 export class AuthService {
-  create(createAuthDto: CreateAuthDto) {
-    return 'This action adds a new auth';
+  register(createAuthDto: CreateAuthDto) {
+    const user = users.find((user) => user.username === createAuthDto.username);
+    if (user) {
+      throw new BadRequestException('用户已存在');
+    }
+    users.push(createAuthDto);
+    return { username: createAuthDto.username, message: '注册成功' };
+  }
+
+  login(loginDto: LoginAuthDto) {
+    const user = users.find((user) => user.username === loginDto.username);
+    if (!user) {
+      throw new BadRequestException('用户不存在');
+    }
+    if (user.password !== loginDto.password) {
+      throw new BadRequestException('密码错误');
+    }
+    return { username: user.username, message: '登录成功' };
   }
 
   findAll() {
-    return `This action returns all auth`;
+    return users;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
-  }
-
-  update(id: number, updateAuthDto: UpdateAuthDto) {
-    return `This action updates a #${id} auth`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
+  findOne(username: string) {
+    return users.find((user) => user.username === username);
   }
 }
