@@ -11,6 +11,7 @@ async function bootstrap() {
     transport: Transport.TCP,
     options: {
       port: 3110,
+      host: '0.0.0.0',
     },
   });
   await microservice.listen();
