@@ -31,5 +31,6 @@ ENV PORT=
 ENV MICRO_PORT=3110
 
 EXPOSE ${PORT}
+EXPOSE ${MICRO_PORT}
 
 CMD ["node", "main.js"]
