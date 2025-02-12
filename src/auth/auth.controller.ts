@@ -5,12 +5,14 @@ import { Response } from 'express';
 import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { LoginAuthDto } from './dto/login-auth.dto';
+import { ConfigService } from '@nestjs/config';
 
 @Controller('auth')
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private readonly jwtService: JwtService,
+    private readonly configService: ConfigService,
   ) {}
 
   @Post('register')
@@ -24,12 +26,16 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const user = this.authService.login(loginDto);
+
     const token = this.jwtService.sign({ username: user.username });
+
     console.log(user, token);
     res.cookie('token', token, {
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24 * 12,
     });
+
+    res.setHeader('token', `${token}`);
 
     return { user };
   }
@@ -38,14 +44,24 @@ export class AuthController {
   findAll() {
     return this.authService.findAll();
   }
+
   @MessagePattern('isLogin')
   isLogin(token: string) {
     console.log(token);
     try {
       const user = this.jwtService.verify(token);
-      return { isLogin: true, user };
+      return {
+        isLogin: true,
+        user,
+      };
     } catch {
-      return { isLogin: false };
+      return { isLogin: false, redirect: this.configService.get('LOGIN_PAGE') };
     }
+  }
+
+  @MessagePattern('getRedirectUrl')
+  getRedirectUrl() {
+    console.log(this.configService.get('LOGIN_PAGE'));
+    return this.configService.get('LOGIN_PAGE');
   }
 }
