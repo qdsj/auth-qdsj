@@ -7,10 +7,14 @@ import { JwtModule } from '@nestjs/jwt';
 // import { TypeOrmModule } from '@nestjs/typeorm';
 // import { User } from './auth/entities/User.entity';
 // import { Auth } from './auth/entities/auth.entity';
-
+console.log(process.env.NODE_ENV);
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
+    ConfigModule.forRoot({
+      envFilePath:
+        process.env.NODE_ENV === 'production' ? '.env.production' : '.env',
+      isGlobal: true,
+    }),
     // TypeOrmModule.forRoot({
     //   type: 'mysql',
     //   host: process.env.DB_HOST,
@@ -30,7 +34,7 @@ import { JwtModule } from '@nestjs/jwt';
     AuthModule,
     JwtModule.register({
       global: true,
-      secret: process.env.JWT_SECRET || 'zenos',
+      secret: process.env.JWT_SECRET || 'auth-zenos',
       signOptions: { expiresIn: '12h' },
     }),
   ],
