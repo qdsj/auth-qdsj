@@ -22,7 +22,7 @@ import { UserModule } from './user/user.module';
     AuthModule,
     JwtModule.register({
       global: true,
-      secret: process.env.JWT_SECRET || 'zenos',
+      secret: process.env.JWT_SECRET || 'auth-zenos',
       signOptions: { expiresIn: '12h' },
     }),
     UserModule,
