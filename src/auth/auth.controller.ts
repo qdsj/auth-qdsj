@@ -3,8 +3,8 @@ import { JwtService } from '@nestjs/jwt';
 import { MessagePattern } from '@nestjs/microservices';
 import { Response } from 'express';
 import { AuthService } from './auth.service';
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { LoginAuthDto } from './dto/login-auth.dto';
+import { RegisterDto } from './dto/register.dto';
+import { LoginDto } from './dto/login.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -14,16 +14,16 @@ export class AuthController {
   ) {}
 
   @Post('register')
-  register(@Body() createAuthDto: CreateAuthDto) {
+  register(@Body() createAuthDto: RegisterDto) {
     return this.authService.register(createAuthDto);
   }
 
   @Post('login')
-  login(
-    @Body() loginDto: LoginAuthDto,
+  async login(
+    @Body() loginDto: LoginDto,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const user = this.authService.login(loginDto);
+    const user = await this.authService.login(loginDto);
     const token = this.jwtService.sign({ username: user.username });
     console.log(user, token);
     res.cookie('token', token, {
@@ -35,8 +35,8 @@ export class AuthController {
   }
 
   @Get()
-  findAll() {
-    return this.authService.findAll();
+  auth() {
+    return { message: '/auth' };
   }
   @MessagePattern('isLogin')
   isLogin(token: string) {

@@ -3,12 +3,6 @@ import { Auth } from 'src/auth/entities/auth.entity';
 import { User } from 'src/auth/entities/User.entity';
 
 export const getDataBaseConfig = (configService: ConfigService) => {
-  console.log(configService.get('DB_HOST'));
-  console.log(configService.get('DB_PORT'));
-  console.log(configService.get('DB_USERNAME'));
-  console.log(configService.get('DB_PASSWORD'));
-  console.log(configService.get('DB_DATABASE'));
-
   return {
     type: 'mysql',
     host: configService.get('DB_HOST'),

@@ -1,16 +1,16 @@
 import {
-  PrimaryGeneratedColumn,
   Column,
   Entity,
-  ManyToOne,
   JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
 import { User } from './User.entity';
 
 @Entity('auth')
 export class Auth {
   @PrimaryGeneratedColumn('uuid')
-  id: number;
+  id: string;
 
   @Column({
     type: 'varchar',
@@ -18,7 +18,11 @@ export class Auth {
   })
   password: string;
 
-  @ManyToOne(() => User)
+  @OneToOne(() => User, {
+    cascade: true,
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
   @JoinColumn({ name: 'userId' })
   user: User;
 }
