@@ -20,5 +20,5 @@ export class Auth {
 
   @ManyToOne(() => User)
   @JoinColumn({ name: 'userId' })
-  userId: User;
+  user: User;
 }
