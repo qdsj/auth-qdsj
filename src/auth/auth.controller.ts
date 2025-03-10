@@ -26,9 +26,11 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const user = await this.authService.login(loginDto);
-    const token = this.jwtService.sign({ username: user.username });
+    const token = this.jwtService.sign({
+      username: user.username,
+      id: user.id,
+    });
 
-    console.log(user, token);
     res.cookie('token', token, {
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24 * 12,

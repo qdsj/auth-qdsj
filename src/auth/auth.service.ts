@@ -70,6 +70,10 @@ export class AuthService {
     }
 
     // 然后登录
-    return { username: data.username, message: '登录成功' };
+    return {
+      id: userByName.id,
+      username: userByName.username,
+      message: '登录成功',
+    };
   }
 }

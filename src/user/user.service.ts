@@ -15,8 +15,16 @@ export class UserService {
   }
 
   findOneByNameOrEmail(username: string, email: string) {
+    if (!username && !email) return null;
+    const whereArr = [];
+    if (username) {
+      whereArr.push({ username });
+    }
+    if (email) {
+      whereArr.push({ email });
+    }
     return this.userRepository.findOne({
-      where: [{ username }, { email }],
+      where: whereArr,
     });
   }
 }
