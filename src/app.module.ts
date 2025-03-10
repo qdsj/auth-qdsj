@@ -10,7 +10,10 @@ import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
+    ConfigModule.forRoot({
+      envFilePath: ['.env', '.env.local'],
+      isGlobal: true,
+    }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -18,7 +21,6 @@ import { UserModule } from './user/user.module';
         return getDataBaseConfig(configService) as any;
       },
     }),
-
     AuthModule,
     JwtModule.register({
       global: true,
