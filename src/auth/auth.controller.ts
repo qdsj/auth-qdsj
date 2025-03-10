@@ -53,7 +53,7 @@ export class AuthController {
       const user = this.jwtService.verify(token);
       return {
         isLogin: true,
-        user,
+        ...user,
       };
     } catch {
       return { isLogin: false, redirect: this.configService.get('LOGIN_PAGE') };
