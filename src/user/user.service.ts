@@ -27,4 +27,12 @@ export class UserService {
       where: whereArr,
     });
   }
+
+  findUserById(id: string) {
+    return this.userRepository.findOne({
+      where: {
+        id,
+      },
+    });
+  }
 }

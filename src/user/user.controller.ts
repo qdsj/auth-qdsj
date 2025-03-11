@@ -18,4 +18,10 @@ export class UserController {
     console.log(username, email);
     return this.userService.findOneByNameOrEmail(username, email);
   }
+
+  @MessagePattern('findUserById')
+  findUserById(id: string) {
+    if (!id) return null;
+    return this.userService.findUserById(id);
+  }
 }
