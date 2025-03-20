@@ -15,6 +15,7 @@ FROM node:22-alpine AS production-stage
 
 COPY --from=build-stage /app/dist /app
 COPY --from=build-stage /app/package*.json /app
+COPY --from=build-stage /app/.env.production /app
 
 WORKDIR /app
 
@@ -28,7 +29,9 @@ ENV DB_PORT=3307
 ENV DB_DATABASE=authqdsj
 ENV NODE_ENV=production
 ENV PORT=
+ENV MICRO_PORT=3110
 
 EXPOSE ${PORT}
+EXPOSE ${MICRO_PORT}
 
 CMD ["node", "main.js"]

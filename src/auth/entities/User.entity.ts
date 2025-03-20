@@ -9,11 +9,11 @@ export class User {
     type: 'varchar',
     nullable: false,
   })
-  nickname: string;
+  username: string;
 
   @Column({
     type: 'varchar',
     nullable: false,
   })
-  emial: string;
+  email: string;
 }

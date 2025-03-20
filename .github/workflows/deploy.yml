@@ -22,9 +22,11 @@ jobs:
             port='3100'
           fi
           dockerName='authqdsj'
+          microPort='3110'
           echo "environment=${environment}" >> data.env
           echo "port=${port}" >> data.env
           echo "dockerName=${dockerName}" >> data.env
+          echo "microPort=${microPort}" >> data.env
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
@@ -62,13 +64,8 @@ jobs:
           echo "environment=${environment}" >> $GITHUB_OUTPUT
           echo "port=${port}" >> $GITHUB_OUTPUT
           echo "dockerName=${dockerName}" >> $GITHUB_OUTPUT
+          echo "microPort=${microPort}" >> $GITHUB_OUTPUT
 
-      - name: Print tag
-        run: |
-          echo "tag=${tag}"
-          echo ${environment}
-          echo ${port}
-          echo ${dockerName}
       # 登录到 Docker Hub
       - name: Login to Docker Hub
         uses: docker/login-action@v3
@@ -91,6 +88,7 @@ jobs:
           port: ${{ steps.vars.outputs.port }}
           dockerName: ${{ steps.vars.outputs.dockerName }}
           tag: ${{ steps.vars.outputs.tag }}
+          microPort: ${{ steps.vars.outputs.microPort }}
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SERVER_HOST }}
@@ -102,6 +100,7 @@ jobs:
             docker rm ${{ env.dockerName }} || true
             docker run -d --name ${{ env.dockerName }} \
               -p ${{ env.port }}:${{ env.port }} \
+              -p ${{ env.microPort }}:${{ env.microPort }} \
               -e DB_HOST=${{ secrets.SERVER_HOST }} \
               -e DB_USERNAME=${{ secrets.SQL_AUTHQDSJ_NAME }} \
               -e DB_PASSWORD=${{ secrets.SQL_AUTHQDSJ_KEY }} \

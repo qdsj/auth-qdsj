@@ -1,42 +1,68 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-} from '@nestjs/common';
+import { Body, Controller, Get, Post, Res } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { MessagePattern } from '@nestjs/microservices';
+import { Response } from 'express';
 import { AuthService } from './auth.service';
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
+import { RegisterDto } from './dto/register.dto';
+import { LoginDto } from './dto/login.dto';
+import { ConfigService } from '@nestjs/config';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly jwtService: JwtService,
+    private readonly configService: ConfigService,
+  ) {}
 
-  @Post()
-  create(@Body() createAuthDto: CreateAuthDto) {
-    return this.authService.create(createAuthDto);
+  @Post('register')
+  register(@Body() createAuthDto: RegisterDto) {
+    return this.authService.register(createAuthDto);
+  }
+
+  @Post('login')
+  async login(
+    @Body() loginDto: LoginDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const user = await this.authService.login(loginDto);
+    const token = this.jwtService.sign({
+      username: user.username,
+      id: user.id,
+    });
+
+    res.cookie('token', token, {
+      httpOnly: true,
+      maxAge: 1000 * 60 * 60 * 24 * 12,
+    });
+
+    res.setHeader('token', `${token}`);
+
+    return { user };
   }
 
   @Get()
-  findAll() {
-    return this.authService.findAll();
+  auth() {
+    return { message: '/auth' };
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.authService.findOne(+id);
+  @MessagePattern('isLogin')
+  isLogin(token: string) {
+    console.log(token);
+    try {
+      const user = this.jwtService.verify(token);
+      return {
+        isLogin: true,
+        ...user,
+      };
+    } catch {
+      return { isLogin: false, redirect: this.configService.get('LOGIN_PAGE') };
+    }
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAuthDto: UpdateAuthDto) {
-    return this.authService.update(+id, updateAuthDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.authService.remove(+id);
+  @MessagePattern('getRedirectUrl')
+  getRedirectUrl() {
+    console.log(this.configService.get('LOGIN_PAGE'));
+    return this.configService.get('LOGIN_PAGE');
   }
 }

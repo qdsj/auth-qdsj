@@ -1,32 +1,33 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { JwtModule } from '@nestjs/jwt';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
-// import { TypeOrmModule } from '@nestjs/typeorm';
-// import { User } from './auth/entities/User.entity';
-// import { Auth } from './auth/entities/auth.entity';
+import { getDataBaseConfig } from './database/database-config';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
-    // TypeOrmModule.forRoot({
-    //   type: 'mysql',
-    //   host: process.env.DB_HOST,
-    //   port: +process.env.DB_PORT,
-    //   username: process.env.DB_USERNAME,
-    //   password: process.env.DB_PASSWORD,
-    //   database: process.env.DB_DATABASE,
-    //   entities: [User, Auth],
-    //   synchronize: true,
-    //   poolSize: 5,
-    //   logging: false,
-    //   connectorPackage: 'mysql2',
-    //   extra: {
-    //     authPlugins: 'sha256_password',
-    //   },
-    // }),
+    ConfigModule.forRoot({
+      envFilePath: ['.env', '.env.local', '.env.production'],
+      isGlobal: true,
+    }),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+        return getDataBaseConfig(configService) as any;
+      },
+    }),
     AuthModule,
+    JwtModule.register({
+      global: true,
+      secret: process.env.JWT_SECRET || 'auth-zenos',
+      signOptions: { expiresIn: '12h' },
+    }),
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],
