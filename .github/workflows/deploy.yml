@@ -18,11 +18,12 @@ jobs:
           environment=${{ github.ref == 'refs/heads/main' && 'prod' || 'dev' }}
           if [ $environment == 'prod' ]; then
             port='3101'
+            microPort='3111'
           else
             port='3100'
+            microPort='3110'
           fi
           dockerName='authqdsj'
-          microPort='3110'
           echo "environment=${environment}" >> data.env
           echo "port=${port}" >> data.env
           echo "dockerName=${dockerName}" >> data.env
