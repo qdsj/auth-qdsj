@@ -81,7 +81,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: true
-          tags: zenoschen/authqdsj:${{ env.DOCKER_TAG }}
+          tags: zenoschen/${{ env.dockerName }}:${{ env.DOCKER_TAG }}
 
       # 通过 SSH 在服务器上部署
       - name: Deploy to Server
