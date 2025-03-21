@@ -78,6 +78,7 @@ jobs:
       - name: Build and push
         env:
           DOCKER_TAG: ${{ steps.vars.outputs.tag }}
+          dockerName: ${{ steps.vars.outputs.dockerName }}
         uses: docker/build-push-action@v5
         with:
           push: true
