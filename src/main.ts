@@ -10,7 +10,7 @@ async function bootstrap() {
   const microservice = app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.TCP,
     options: {
-      port: 3110,
+      port: Number(process.env.MICRO_PORT ?? 3110),
       host: '0.0.0.0',
     },
   });
