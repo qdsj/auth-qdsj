@@ -25,7 +25,7 @@ import { UserModule } from './user/user.module';
     JwtModule.register({
       global: true,
       secret: process.env.JWT_SECRET || 'auth-zenos',
-      signOptions: { expiresIn: '12h' },
+      signOptions: { expiresIn: '300d' },
     }),
     UserModule,
   ],
