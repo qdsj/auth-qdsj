@@ -35,4 +35,11 @@ export class UserService {
       },
     });
   }
+
+  updateUserInfo(id: string, data: Omit<User, 'id'>) {
+    // 查找是否此人
+    const user = this.userRepository.findOneBy({ id });
+    if (!user) throw new Error('用户不存在');
+    return this.userRepository.update(id, data);
+  }
 }

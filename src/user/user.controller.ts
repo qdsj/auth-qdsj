@@ -1,6 +1,7 @@
 import { Controller, Get } from '@nestjs/common';
 import { UserService } from './user.service';
 import { MessagePattern } from '@nestjs/microservices';
+import { User } from 'src/auth/entities/User.entity';
 
 @Controller('user')
 export class UserController {
@@ -23,5 +24,21 @@ export class UserController {
   findUserById(id: string) {
     if (!id) return null;
     return this.userService.findUserById(id);
+  }
+
+  @MessagePattern('updateUserInfo')
+  updateUserInfo(id: string, data: Omit<User, 'id'>) {
+    try {
+      this.userService.updateUserInfo(id, data);
+      return {
+        status: 'success',
+        message: '更新成功',
+      };
+    } catch (error) {
+      return {
+        status: 'failed',
+        message: error,
+      };
+    }
   }
 }

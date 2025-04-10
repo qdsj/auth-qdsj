@@ -16,4 +16,23 @@ export class User {
     nullable: false,
   })
   email: string;
+
+  @Column({
+    type: 'varchar',
+    nullable: true,
+  })
+  avatar: string;
+
+  @Column({
+    type: 'varchar',
+    nullable: true,
+  })
+  description: string;
+
+  @Column({
+    type: 'enum',
+    enum: ['male', 'female'],
+    nullable: true,
+  })
+  sex: string;
 }
