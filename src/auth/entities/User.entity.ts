@@ -34,5 +34,5 @@ export class User {
     enum: ['male', 'female'],
     nullable: true,
   })
-  sex: string;
+  sex: 'male' | 'female';
 }

@@ -27,9 +27,9 @@ export class UserController {
   }
 
   @MessagePattern('updateUserInfo')
-  updateUserInfo(id: string, data: Omit<User, 'id'>) {
+  updateUserInfo(data: User) {
     try {
-      this.userService.updateUserInfo(id, data);
+      this.userService.updateUserInfo(data);
       return {
         status: 'success',
         message: '更新成功',
