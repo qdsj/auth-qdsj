@@ -5,6 +5,7 @@ import { RegisterDto } from 'src/auth/dto/register.dto';
 import { Repository } from 'typeorm';
 import { User } from './entities/User.entity';
 import { Auth } from './entities/auth.entity';
+import { USER_DEFAULT_AVATAR } from 'src/constant/img';
 
 @Injectable()
 export class AuthService {
@@ -41,6 +42,7 @@ export class AuthService {
     user.email = data.email;
     auth.user = user;
     auth.password = data.password;
+    user.avatar = USER_DEFAULT_AVATAR;
 
     await this.authRepository.save(auth);
 
