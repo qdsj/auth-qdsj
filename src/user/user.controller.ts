@@ -16,7 +16,6 @@ export class UserController {
   findUserByNameOrEmail(params: { username: string; email: string }) {
     const username = params?.username;
     const email = params?.email;
-    console.log(username, email);
     return this.userService.findOneByNameOrEmail(username, email);
   }
 
@@ -27,9 +26,9 @@ export class UserController {
   }
 
   @MessagePattern('updateUserInfo')
-  updateUserInfo(data: User) {
+  async updateUserInfo(data: User) {
     try {
-      this.userService.updateUserInfo(data);
+      await this.userService.updateUserInfo(data);
       return {
         status: 'success',
         message: '更新成功',

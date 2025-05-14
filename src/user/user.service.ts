@@ -37,16 +37,13 @@ export class UserService {
   }
 
   async updateUserInfo(data: User) {
-    console.log(data);
     // 查找是否此人
     const user = await this.userRepository.findOneBy({ id: data.id });
     if (!user) throw new Error('用户不存在');
     // 不允许修改user name, user email
-    if (
-      (data.username && user.username !== data.username) ||
-      (data.email && user.email !== data.email)
-    )
+    if (data.username || data.email) {
       throw new Error('不允许修改username、 email');
+    }
 
     return this.userRepository.update(data.id, {
       ...user,
