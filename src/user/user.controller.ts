@@ -36,7 +36,7 @@ export class UserController {
     } catch (error) {
       return {
         status: 'failed',
-        message: error,
+        message: error.message,
       };
     }
   }
